@@ -2,7 +2,7 @@ from fastapi import Depends
 
 from crud.user import UserRepo
 from models.user import Users
-from core.hash import hash_text
+from core.security import hash_text
 
 
 class UserService:
