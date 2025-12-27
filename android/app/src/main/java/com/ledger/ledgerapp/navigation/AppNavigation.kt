@@ -17,12 +17,14 @@ import com.ledger.ledgerapp.data.TokenManager
 import com.ledger.ledgerapp.network.models.Transaction
 import com.ledger.ledgerapp.ui.home.HomeScreen
 import com.ledger.ledgerapp.ui.login.LoginScreen
+import com.ledger.ledgerapp.ui.register.RegisterScreen
 import com.ledger.ledgerapp.ui.profile.ProfileScreen
 import com.ledger.ledgerapp.ui.transactions.AddEditTransactionScreen
 import com.ledger.ledgerapp.ui.transactions.TransactionListScreen
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
+    object Register : Screen("register")
     object Home : Screen("home")
     object Profile : Screen("profile")
     object Transactions : Screen("transactions")
@@ -106,6 +108,21 @@ fun AppNavigation(
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
+                },
+                onNavigateToRegister = {
+                    navController.navigate(Screen.Register.route)
+                }
+            )
+        }
+
+        composable(Screen.Register.route) {
+            RegisterScreen(
+                onRegisterSuccess = {
+                    // 注册成功后返回登录页
+                    navController.popBackStack()
+                },
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }

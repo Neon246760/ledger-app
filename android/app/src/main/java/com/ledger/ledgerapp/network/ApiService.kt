@@ -1,6 +1,8 @@
 package com.ledger.ledgerapp.network
 import com.ledger.ledgerapp.network.models.LoginRequest
 import com.ledger.ledgerapp.network.models.LoginResponse
+import com.ledger.ledgerapp.network.models.RegisterRequest
+import com.ledger.ledgerapp.network.models.RegisterResponse
 import com.ledger.ledgerapp.network.models.Transaction
 import com.ledger.ledgerapp.network.models.TransactionRequest
 import com.ledger.ledgerapp.network.models.TransactionResponse
@@ -17,6 +19,11 @@ interface ApiService {
         @Field("username") username : String,
         @Field("password") password : String
     ): Response<LoginResponse>
+
+    @POST("api/register")
+    suspend fun register(
+        @Body request: RegisterRequest
+    ): Response<RegisterResponse>
     
     // 交易记录相关
     // 所有交易API都在 /api/transactions 路径下

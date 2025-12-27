@@ -14,6 +14,7 @@ import com.ledger.ledgerapp.viewmodel.LoginViewModel
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
+    onNavigateToRegister: () -> Unit = {},
     viewModel: LoginViewModel = viewModel()
 ) {
     var username by remember { mutableStateOf("") }
@@ -93,6 +94,15 @@ fun LoginScreen(
             } else {
                 Text("登录")
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(
+            onClick = onNavigateToRegister,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("没有账号？去注册")
         }
         }
     }
