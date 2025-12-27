@@ -3,10 +3,13 @@ package com.ledger.ledgerapp.ui.transactions
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Refresh
@@ -18,12 +21,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ledger.ledgerapp.data.CategoryData
 import com.ledger.ledgerapp.data.TokenManager
 import com.ledger.ledgerapp.network.models.Transaction
 import com.ledger.ledgerapp.network.models.TransactionType
 import com.ledger.ledgerapp.viewmodel.TransactionViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import android.app.DatePickerDialog
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,10 +41,30 @@ fun TransactionListScreen(
     viewModel: TransactionViewModel = viewModel { TransactionViewModel(tokenManager) }
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var showFilterSheet by remember { mutableStateOf(false) }
     
     // 初始加载数据
     LaunchedEffect(Unit) {
         viewModel.loadTransactions()
+    }
+    
+    if (showFilterSheet) {
+        FilterBottomSheet(
+            currentType = uiState.filterType,
+            currentStartDate = uiState.filterStartDate,
+            currentEndDate = uiState.filterEndDate,
+            currentCategory = uiState.filterCategory,
+            onDismiss = { showFilterSheet = false },
+            onApply = { type, start, end, category ->
+                viewModel.loadTransactions(
+                    type = type,
+                    startDate = start,
+                    endDate = end,
+                    category = category
+                )
+                showFilterSheet = false
+            }
+        )
     }
     
     Scaffold(
@@ -46,6 +72,9 @@ fun TransactionListScreen(
             TopAppBar(
                 title = { Text("账目记录") },
                 actions = {
+                    IconButton(onClick = { showFilterSheet = true }) {
+                        Icon(Icons.Default.FilterList, contentDescription = "筛选")
+                    }
                     IconButton(onClick = { viewModel.loadTransactions() }) {
                         Icon(Icons.Default.Refresh, contentDescription = "刷新")
                     }
@@ -118,6 +147,161 @@ fun TransactionListScreen(
                     // 可以显示 Snackbar
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+fun FilterBottomSheet(
+    currentType: TransactionType?,
+    currentStartDate: String?,
+    currentEndDate: String?,
+    currentCategory: String?,
+    onDismiss: () -> Unit,
+    onApply: (TransactionType?, String?, String?, String?) -> Unit
+) {
+    val sheetState = rememberModalBottomSheetState()
+    var selectedType by remember { mutableStateOf(currentType) }
+    var startDate by remember { mutableStateOf(currentStartDate) }
+    var endDate by remember { mutableStateOf(currentEndDate) }
+    var selectedCategory by remember { mutableStateOf(currentCategory) }
+
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+
+    fun showDatePicker(currentDate: String?, onDateSelected: (String) -> Unit) {
+        val parts = currentDate?.split("-")
+        val year = parts?.getOrNull(0)?.toIntOrNull() ?: calendar.get(Calendar.YEAR)
+        val month = (parts?.getOrNull(1)?.toIntOrNull() ?: (calendar.get(Calendar.MONTH) + 1)) - 1
+        val day = parts?.getOrNull(2)?.toIntOrNull() ?: calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(
+            context,
+            { _, y, m, d ->
+                val formattedDate = String.format("%04d-%02d-%02d", y, m + 1, d)
+                onDateSelected(formattedDate)
+            },
+            year, month, day
+        ).show()
+    }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                text = "筛选条件",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+
+            // 类型筛选
+            Text(text = "类型", style = MaterialTheme.typography.titleMedium)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChip(
+                    selected = selectedType == null,
+                    onClick = { selectedType = null },
+                    label = { Text("全部") }
+                )
+                FilterChip(
+                    selected = selectedType == TransactionType.EXPENSE,
+                    onClick = { selectedType = TransactionType.EXPENSE },
+                    label = { Text("支出") }
+                )
+                FilterChip(
+                    selected = selectedType == TransactionType.INCOME,
+                    onClick = { selectedType = TransactionType.INCOME },
+                    label = { Text("收入") }
+                )
+            }
+
+            // 日期筛选
+            Text(text = "日期范围", style = MaterialTheme.typography.titleMedium)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedButton(
+                    onClick = { showDatePicker(startDate) { startDate = it } },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(startDate ?: "开始日期")
+                }
+                Text("-")
+                OutlinedButton(
+                    onClick = { showDatePicker(endDate) { endDate = it } },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(endDate ?: "结束日期")
+                }
+            }
+
+            // 分类筛选
+            Text(text = "分类", style = MaterialTheme.typography.titleMedium)
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val categories = remember(selectedType) {
+                    if (selectedType == TransactionType.INCOME) {
+                        CategoryData.incomeCategories
+                    } else if (selectedType == TransactionType.EXPENSE) {
+                        CategoryData.expenseCategories
+                    } else {
+                        CategoryData.expenseCategories + CategoryData.incomeCategories
+                    }
+                }
+
+                FilterChip(
+                    selected = selectedCategory == null,
+                    onClick = { selectedCategory = null },
+                    label = { Text("全部分类") }
+                )
+
+                categories.forEach { category ->
+                    FilterChip(
+                        selected = selectedCategory == category.name,
+                        onClick = {
+                            selectedCategory = if (selectedCategory == category.name) null else category.name
+                        },
+                        label = { Text(category.name) }
+                    )
+                }
+            }
+
+            // 按钮
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                OutlinedButton(
+                    onClick = {
+                        selectedType = null
+                        startDate = null
+                        endDate = null
+                        selectedCategory = null
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("重置")
+                }
+                Button(
+                    onClick = { onApply(selectedType, startDate, endDate, selectedCategory) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("应用")
+                }
+            }
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

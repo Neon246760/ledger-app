@@ -36,7 +36,12 @@ data class TransactionUiState(
     val totalExpense: Double = 0.0,
     val balance: Double = 0.0,
     val expenseStats: List<CategoryStat> = emptyList(),
-    val dailyStats: List<DailyStat> = emptyList()
+    val dailyStats: List<DailyStat> = emptyList(),
+    // Filter states
+    val filterType: TransactionType? = null,
+    val filterStartDate: String? = null,
+    val filterEndDate: String? = null,
+    val filterCategory: String? = null
 )
 
 
@@ -56,7 +61,14 @@ class TransactionViewModel(private val tokenManager: TokenManager) : ViewModel()
         category: String? = null
     ) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+            _uiState.value = _uiState.value.copy(
+                isLoading = true, 
+                error = null,
+                filterType = type,
+                filterStartDate = startDate,
+                filterEndDate = endDate,
+                filterCategory = category
+            )
             
             try {
                 val response = apiService.getTransactions(
