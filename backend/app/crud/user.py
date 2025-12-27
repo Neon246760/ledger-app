@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 from sqlmodel import select
 
-from models.user import Users
-from core.db import SessionDep
+from app.models.user import Users
+from app.core.db import SessionDep
 
 
 class UserRepo:

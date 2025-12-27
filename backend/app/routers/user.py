@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from schemas.user import RegisterRequest
-from services.user import UserService, get_user_service
-from core.security import get_current_user, verify_password, create_access_token
+from app.schemas.user import RegisterRequest
+from app.services.user import UserService, get_user_service
+from app.core.security import get_current_user, verify_password, create_access_token, hash_text
 
 router = APIRouter()
 
@@ -19,6 +19,12 @@ def register_user(payload: RegisterRequest, service: UserService = Depends(get_u
 @router.post("/login")
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), service: UserService = Depends(get_user_service)):
     user = service.repo.find_user_by_username(form_data.username)
+    print(f"Login attempt for: {form_data.username}, password: {form_data.password}")
+    if user:
+        print(f"User found. Stored hash: {user.password}")
+        print(f"Computed hash: {hash_text(form_data.password)}")
+        print(f"Match: {verify_password(form_data.password, user.password)}")
+    
     if user is None or not verify_password(form_data.password, user.password):
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     access_token = create_access_token(data={"sub": user.username})

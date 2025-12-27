@@ -1,8 +1,8 @@
 from fastapi import Depends
 
-from crud.user import UserRepo
-from models.user import Users
-from core.security import hash_text
+from app.crud.user import UserRepo
+from app.models.user import Users
+from app.core.security import hash_text
 
 
 class UserService:
@@ -10,7 +10,11 @@ class UserService:
         self.repo = repo
 
     def register_user(self, username: str, password: str):
-        user = Users(username=username, password=hash_text(password))
+        
+        print(f"Registering user: {username}, password: {password}")
+        hashed = hash_text(password)
+        print(f"Hashed password: {hashed}")
+        user = Users(username=username, password=hashed)
         self.repo.create_user(user)
 
 

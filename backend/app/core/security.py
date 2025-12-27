@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 SECRET_KEY = "WJL-1120233061/ZXH-1120233278"
 ALGORITHM = "HS256"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/login")
 
 
 def hash_text(text: str) -> str:
