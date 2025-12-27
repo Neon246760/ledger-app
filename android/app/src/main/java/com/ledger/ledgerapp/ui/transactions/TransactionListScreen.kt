@@ -35,6 +35,11 @@ fun TransactionListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     
+    // 初始加载数据
+    LaunchedEffect(Unit) {
+        viewModel.loadTransactions()
+    }
+    
     Scaffold(
         topBar = {
             TopAppBar(

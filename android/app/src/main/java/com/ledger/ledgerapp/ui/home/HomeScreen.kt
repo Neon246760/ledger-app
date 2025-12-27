@@ -22,6 +22,9 @@ import com.ledger.ledgerapp.data.TokenManager
 import com.ledger.ledgerapp.viewmodel.TransactionViewModel
 import kotlinx.coroutines.delay
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -81,6 +84,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -120,18 +124,38 @@ fun HomeScreen(
                 )
             }
             
-            // 最近账目预览（可选）
+            // 最近账目预览
+            Text(
+                text = "最近记录",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            
             if (uiState.transactions.isNotEmpty()) {
-                Text(
-                    text = "最近记录",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                
                 RecentTransactionsPreview(
                     transactions = uiState.transactions.take(5),
                     onViewAll = onNavigateToTransactions
                 )
+            } else {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "暂无记录，快去记一笔吧！",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
         }
     }

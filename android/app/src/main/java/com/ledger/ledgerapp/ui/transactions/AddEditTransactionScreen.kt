@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ledger.ledgerapp.data.CategoryData
 import com.ledger.ledgerapp.data.TokenManager
 import com.ledger.ledgerapp.network.models.Transaction
 import com.ledger.ledgerapp.network.models.TransactionType
@@ -47,6 +48,22 @@ fun AddEditTransactionScreen(
         )
     }
     var categoryText by remember(loadedTransaction) { mutableStateOf(loadedTransaction?.category ?: "") }
+    
+    // 当类型改变时，如果当前分类不在新类型的列表中，则清空分类（除非是初始加载）
+    LaunchedEffect(selectedType) {
+        val categories = CategoryData.getCategoriesByType(selectedType)
+        if (categoryText.isNotEmpty() && categories.none { it.name == categoryText }) {
+            // 只有当不是初始加载时才清空，这里简单处理，如果是用户切换类型，通常需要重选分类
+            // 但为了避免编辑时刚进来就被清空，我们需要区分是用户点击还是初始加载
+            // 由于 selectedType 是 remember 的，初始加载后不会变，除非用户点击
+            // 所以这里可以安全地清空，但要注意编辑模式下初始 categoryText 可能不匹配默认 type（如果数据有问题）
+            // 实际逻辑：如果当前 categoryText 不在新的 categories 列表中，且不是空，则清空
+             if (loadedTransaction == null || loadedTransaction!!.type != selectedType.toApiString()) {
+                 categoryText = ""
+             }
+        }
+    }
+
     var descriptionText by remember(loadedTransaction) { mutableStateOf(loadedTransaction?.description ?: "") }
     var dateText by remember(loadedTransaction) { mutableStateOf(
         loadedTransaction?.date?.let {
@@ -137,14 +154,11 @@ fun AddEditTransactionScreen(
                 }
             )
             
-            // 分类
-            OutlinedTextField(
-                value = categoryText,
-                onValueChange = { categoryText = it },
-                label = { Text("分类") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                placeholder = { Text("例如：餐饮、交通、工资等") }
+            // 分类选择器
+            CategorySelector(
+                categories = CategoryData.getCategoriesByType(selectedType),
+                selectedCategory = categoryText,
+                onCategorySelected = { categoryText = it }
             )
             
             // 描述
