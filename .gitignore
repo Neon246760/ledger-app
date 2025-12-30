@@ -1,2 +1,2 @@
-backend/.venv/
-backend/app/app.db
+.trae
+.vercel
