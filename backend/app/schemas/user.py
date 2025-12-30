@@ -25,13 +25,3 @@ class DeleteAccountRequest(BaseModel):
     password: str
     avatar_url: str | None = None
 
-
-class UserResponse(BaseModel):
-    id: int
-    username: str
-    avatar_url: str | None = None
-
-
-class UserUpdate(BaseModel):
-    avatar_url: str | None = None
-
