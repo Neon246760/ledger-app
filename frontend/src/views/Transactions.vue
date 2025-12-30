@@ -10,7 +10,7 @@
 
     <!-- Filters -->
     <div class="bg-white p-4 rounded-xl border border-gray-200 mb-6 flex flex-wrap gap-4 shadow-sm">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <span class="text-gray-600 text-sm font-medium">Type:</span>
         <select v-model="filters.type" class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none">
           <option value="">All</option>
@@ -18,25 +18,26 @@
           <option value="expense">Expense</option>
         </select>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <span class="text-gray-600 text-sm font-medium">Date Range:</span>
         <input
           type="date"
           v-model="filters.startDate"
-          class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+          class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none w-36 sm:w-auto"
         />
         <span class="text-gray-400">—</span>
         <input
           type="date"
           v-model="filters.endDate"
-          class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+          class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none w-36 sm:w-auto"
         />
       </div>
     </div>
 
     <!-- List -->
-    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-      <table class="w-full text-left border-collapse">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="min-w-[720px] w-full text-left border-collapse">
         <thead class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider font-semibold">
           <tr>
             <th class="p-4 border-b border-gray-200">Date</th>
@@ -71,7 +72,8 @@
             </td>
           </tr>
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
 
     <!-- Add Modal -->

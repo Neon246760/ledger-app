@@ -48,8 +48,7 @@
     <div class="flex-1 flex flex-col min-w-0 bg-gray-50">
       <header class="md:hidden bg-white border-b border-gray-200 p-4 flex justify-between items-center shadow-sm sticky top-0 z-20">
         <div class="text-xl font-bold text-primary">LEDGER</div>
-        <!-- Mobile menu button placeholder -->
-        <button class="text-gray-600 p-2 border border-gray-200 rounded-lg hover:bg-gray-50">Menu</button>
+        <button class="text-gray-600 p-2 border border-gray-200 rounded-lg hover:bg-gray-50" @click="toggleMobileNav">Menu</button>
       </header>
 
       <!-- Main Content -->
@@ -136,6 +135,41 @@
       </div>
     </div>
   </div>
+
+  <!-- Mobile Nav Drawer -->
+  <div v-if="showMobileNav" class="fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/40" @click="toggleMobileNav"></div>
+    <div class="absolute left-0 top-0 bottom-0 w-72 bg-white border-r border-gray-200 shadow-xl p-4">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-lg font-bold text-primary">Menu</div>
+        <button class="text-gray-500 hover:text-gray-900" @click="toggleMobileNav">✕</button>
+      </div>
+      <div
+        class="flex items-center gap-3 mb-4 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+        @click="openUserFromMobile"
+      >
+        <div class="relative w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold shadow-sm overflow-hidden">
+          <img v-if="avatarUrl" :src="avatarUrl" alt="avatar" class="w-full h-full object-cover" />
+          <span v-else>{{ userInitial }}</span>
+        </div>
+        <div class="overflow-hidden">
+          <div class="text-sm font-medium text-gray-900 truncate">{{ authStore.user?.username || 'User' }}</div>
+          <div class="text-xs text-gray-500">User Settings</div>
+        </div>
+      </div>
+      <nav class="space-y-2">
+        <router-link to="/" class="nav-item" exact-active-class="router-link-active" @click="toggleMobileNav">Dashboard</router-link>
+        <router-link to="/transactions" class="nav-item" @click="toggleMobileNav">Transactions</router-link>
+        <router-link to="/statistics" class="nav-item" @click="toggleMobileNav">Statistics</router-link>
+        <router-link to="/budget" class="nav-item" @click="toggleMobileNav">Budget</router-link>
+      </nav>
+      <div class="mt-6">
+        <button @click="logout" class="w-full py-2.5 px-4 bg-white hover:bg-red-50 text-gray-600 hover:text-red-600 rounded-lg transition-all text-sm border border-gray-200 hover:border-red-200 shadow-sm">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -158,6 +192,7 @@ const logout = () => {
 
 const avatarUrl = computed(() => authStore.user?.avatarUrl || '')
 const showUserPanel = ref(false)
+const showMobileNav = ref(false)
 const showPassword = ref(false)
 const showDelete = ref(false)
 const newPassword = ref('')
@@ -168,6 +203,8 @@ const deleteError = ref('')
 const avatarInput = ref<HTMLInputElement | null>(null)
 
 const toggleUserPanel = () => { showUserPanel.value = true }
+const toggleMobileNav = () => { showMobileNav.value = !showMobileNav.value }
+const openUserFromMobile = () => { showMobileNav.value = false; showUserPanel.value = true }
 const togglePassword = () => { showPassword.value = !showPassword.value; passwordError.value = '' }
 const toggleDelete = () => { showDelete.value = !showDelete.value; deleteError.value = '' }
 

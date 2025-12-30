@@ -3,18 +3,18 @@
     <h1 class="text-2xl font-bold text-gray-900 mb-6 tracking-tight">Statistics</h1>
 
     <!-- Date Range Selector (Default: current month) -->
-    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex items-center gap-3">
+    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex items-center gap-3 flex-wrap">
       <label class="text-sm font-medium text-gray-700">Date Range</label>
       <input
         type="date"
         v-model="startDate"
-        class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+        class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none w-36 sm:w-auto"
       />
       <span class="text-gray-400">—</span>
       <input
         type="date"
         v-model="endDate"
-        class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+        class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none w-36 sm:w-auto"
       />
     </div>
 

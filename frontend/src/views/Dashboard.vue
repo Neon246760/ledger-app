@@ -4,18 +4,18 @@
 
     <!-- Date Range Filter -->
     <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex flex-wrap items-center gap-4">
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <span class="text-gray-600 text-sm font-medium">Date Range:</span>
         <input
           type="date"
           v-model="startDate"
-          class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+          class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none w-36 sm:w-auto"
         />
         <span class="text-gray-400">—</span>
         <input
           type="date"
           v-model="endDate"
-          class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+          class="bg-gray-50 border border-gray-300 rounded-lg p-2 text-gray-900 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none w-36 sm:w-auto"
         />
       </div>
       <div class="text-xs text-gray-500">
@@ -99,12 +99,12 @@
                   <TrashIcon class="w-4 h-4" />
                 </button>
               </span>
-              <span
-                v-for="(cat, idx) in categoryStore.incomeCategories"
-                :key="'indicator-income-'+idx"
-                v-if="dragType === 'income' && dragOverIndex === idx"
-                class="w-2 h-7 bg-primary/20 rounded transition-all"
-              />
+              <template v-for="(_, idx) in categoryStore.incomeCategories" :key="'indicator-income-'+idx">
+                <span
+                  v-if="dragType === 'income' && dragOverIndex === idx"
+                  class="w-2 h-7 bg-primary/20 rounded transition-all"
+                ></span>
+              </template>
             </div>
           </div>
           <div class="border border-gray-200 rounded-xl p-4">
@@ -128,12 +128,12 @@
                   <TrashIcon class="w-4 h-4" />
                 </button>
               </span>
-              <span
-                v-for="(cat, idx) in categoryStore.expenseCategories"
-                :key="'indicator-expense-'+idx"
-                v-if="dragType === 'expense' && dragOverIndex === idx"
-                class="w-2 h-7 bg-primary/20 rounded transition-all"
-              />
+              <template v-for="(_, idx) in categoryStore.expenseCategories" :key="'indicator-expense-'+idx">
+                <span
+                  v-if="dragType === 'expense' && dragOverIndex === idx"
+                  class="w-2 h-7 bg-primary/20 rounded transition-all"
+                ></span>
+              </template>
             </div>
           </div>
         </div>
