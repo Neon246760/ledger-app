@@ -19,7 +19,7 @@ import java.io.File
 
 data class ProfileUiState(
     val username: String? = null,
-    val avatarPath: String? = null,
+    val avatarUrl: String? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
     val uploadSuccess: Boolean = false
@@ -50,7 +50,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     val user = response.body()!!
                     _uiState.value = _uiState.value.copy(
                         username = user.username,
-                        avatarPath = user.avatarPath,
+                        avatarUrl = user.avatarUrl,
                         isLoading = false
                     )
                 } else {
@@ -87,10 +87,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                     
                     if (imagePath != null) {
                         // 2. Update User Profile
-                        val updateResponse = apiService.updateCurrentUser(UserUpdate(avatarPath = imagePath))
+                        val updateResponse = apiService.updateCurrentUser(UserUpdate(avatarUrl = imagePath))
                         if (updateResponse.isSuccessful) {
                             _uiState.value = _uiState.value.copy(
-                                avatarPath = imagePath,
+                                avatarUrl = imagePath,
                                 isLoading = false,
                                 uploadSuccess = true
                             )

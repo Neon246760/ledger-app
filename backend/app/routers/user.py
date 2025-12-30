@@ -69,30 +69,3 @@ def delete_account(
     service: UserService = Depends(get_user_service)
 ):
     return service.delete_account(current_username, payload.password, payload.avatar_url)
-
-
-@router.get("/me", response_model=UserResponse)
-def read_users_me(
-    current_username: str = Depends(get_current_user),
-    service: UserService = Depends(get_user_service)
-):
-    user = service.repo.find_user_by_username(current_username)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-
-@router.put("/me", response_model=UserResponse)
-def update_user_me(
-    user_update: UserUpdate,
-    current_username: str = Depends(get_current_user),
-    service: UserService = Depends(get_user_service)
-):
-    if user_update.avatar_path is not None:
-        updated_user = service.update_user_avatar(current_username, user_update.avatar_path)
-        return updated_user
-    
-    user = service.repo.find_user_by_username(current_username)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
