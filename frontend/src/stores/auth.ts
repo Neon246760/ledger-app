@@ -16,23 +16,34 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const setUser = (newUser: any) => {
-    const avatarUrl = getStoredAvatar(newUser?.username)
-    user.value = avatarUrl ? { ...newUser, avatarUrl } : newUser
+    // Map backend avatar_path to avatarUrl for frontend compatibility
+    if (newUser?.avatar_path) {
+      newUser.avatarUrl = newUser.avatar_path
+    }
+
+    user.value = newUser
     localStorage.setItem('user', JSON.stringify(newUser))
   }
 
   const setAvatarUrl = (url: string) => {
     if (!user.value?.username) return
+    
+    const updatedUser = { 
+      ...(user.value || {}), 
+      avatarUrl: url,
+      avatar_path: url 
+    }
+    
+    user.value = updatedUser
+    localStorage.setItem('user', JSON.stringify(updatedUser))
+    
+    // Also update the legacy local storage key if needed, or just remove it.
+    // For now, we'll keep it in sync but setUser won't prioritize it.
     if (url) {
       localStorage.setItem(`avatar:${user.value.username}`, url)
-      user.value = { ...(user.value || {}), avatarUrl: url }
     } else {
       localStorage.removeItem(`avatar:${user.value.username}`)
-      const updated = { ...(user.value || {}) }
-      delete (updated as any).avatarUrl
-      user.value = updated
     }
-    localStorage.setItem('user', JSON.stringify(user.value))
   }
 
   const logout = () => {

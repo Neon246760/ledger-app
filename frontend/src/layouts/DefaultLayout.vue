@@ -2,8 +2,9 @@
   <div class="min-h-screen bg-gray-50 flex text-gray-900 font-sans">
     <!-- Sidebar -->
     <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col shadow-sm z-10">
-      <div class="p-6 text-2xl font-bold text-primary tracking-tight flex items-center gap-2">
-        <span class="bg-primary text-white p-1 rounded">L</span>EDGER
+      <div class="p-6 flex items-center gap-2">
+        <img :src="appIcon" alt="App Logo" class="h-8 w-auto rounded-full" />
+        <span class="text-2xl font-bold text-primary tracking-tight">LEDGER</span>
       </div>
       <nav class="flex-1 px-4 py-4 space-y-1">
         <router-link to="/" class="nav-item" exact-active-class="router-link-active">
@@ -47,7 +48,10 @@
     <!-- Mobile Header -->
     <div class="flex-1 flex flex-col min-w-0 bg-gray-50">
       <header class="md:hidden bg-white border-b border-gray-200 p-4 flex justify-between items-center shadow-sm sticky top-0 z-20">
-        <div class="text-xl font-bold text-primary">LEDGER</div>
+        <div class="flex items-center gap-2">
+          <img :src="appIcon" alt="App Logo" class="h-8 w-auto rounded-full" />
+          <span class="text-xl font-bold text-primary">LEDGER</span>
+        </div>
         <button class="text-gray-600 p-2 border border-gray-200 rounded-lg hover:bg-gray-50" @click="toggleMobileNav">Menu</button>
       </header>
 
@@ -177,6 +181,7 @@ import { computed, ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import api from '@/api'
+import appIcon from '@/assets/icon.png'
 
 const authStore = useAuthStore()
 const router = useRouter()
