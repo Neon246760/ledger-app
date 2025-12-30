@@ -6,7 +6,7 @@ docker compose up -d --build
 ```
 
 启动后：
-- 前端：HTTP `http://localhost/`
+- 前端：HTTP `http://localhost:5000/`
 - 后端 API：HTTP `http://localhost/api/...`
 - Swagger 文档：`http://localhost/api/docs`
 - 静态上传：`http://localhost/uploads/...`
@@ -27,8 +27,9 @@ docker compose up -d --build
 - 数据库路径通过环境变量 `DB_PATH` 控制，默认为 `app.db`；Compose 中设置为 `/data/app.db`
 
 ## 前端镜像说明
+- 前端镜像说明
 - 构建产物复制到 `/usr/share/nginx/html`
-- Nginx 监听 `80` 端口
+- Nginx 监听容器内 `80` 端口（映射到宿主机 `5000`）
 - 反向代理：
   - `/api` -> `http://backend:8000/api`
   - `/uploads` -> `http://backend:8000/uploads`
