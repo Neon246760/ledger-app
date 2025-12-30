@@ -13,6 +13,7 @@ object RetrofitClient {
     private const val TAG = "RetrofitClient"
 
     const val BASE_URL = "http://43.128.226.245:8000/"
+    // const val BASE_URL = "http://10.0.2.2:8000/"
     
     init {
         Log.d(TAG, "Initializing RetrofitClient with BASE_URL: $BASE_URL")

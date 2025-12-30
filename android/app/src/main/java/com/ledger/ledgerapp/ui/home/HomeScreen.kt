@@ -109,12 +109,12 @@ fun HomeScreen(
                         Icon(Icons.Default.PieChart, contentDescription = "统计")
                     }
                     IconButton(onClick = onNavigateToProfile) {
-                        if (profileUiState.avatarPath != null) {
-                            val avatarUrl = if (profileUiState.avatarPath!!.startsWith("http")) {
-                                profileUiState.avatarPath
+                        if (profileUiState.avatarUrl != null) {
+                            val avatarUrl = if (profileUiState.avatarUrl!!.startsWith("http")) {
+                                profileUiState.avatarUrl
                             } else {
                                 val baseUrl = RetrofitClient.BASE_URL.removeSuffix("/")
-                                "$baseUrl${profileUiState.avatarPath}"
+                                "$baseUrl${profileUiState.avatarUrl}"
                             }
                             AsyncImage(
                                 model = avatarUrl,

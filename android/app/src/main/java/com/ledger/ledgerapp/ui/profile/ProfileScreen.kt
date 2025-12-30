@@ -121,12 +121,12 @@ fun ProfileScreen(
                     .size(120.dp)
                     .clickable { launcher.launch("image/*") }
             ) {
-                if (uiState.avatarPath != null) {
-                    val avatarUrl = if (uiState.avatarPath!!.startsWith("http")) {
-                        uiState.avatarPath
+                if (uiState.avatarUrl != null) {
+                    val avatarUrl = if (uiState.avatarUrl!!.startsWith("http")) {
+                        uiState.avatarUrl
                     } else {
                         val baseUrl = RetrofitClient.BASE_URL.removeSuffix("/")
-                        "$baseUrl${uiState.avatarPath}"
+                        "$baseUrl${uiState.avatarUrl}"
                     }
                     AsyncImage(
                         model = avatarUrl,

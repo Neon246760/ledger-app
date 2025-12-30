@@ -236,7 +236,7 @@ const onAvatarSelected = async (e: Event) => {
     const url = res.data.url
     
     // Update user profile on backend
-    await api.put('/me', { avatar_path: url })
+    await api.put('/me', { avatar_url: url })
     
     authStore.setAvatarUrl(url)
   } catch (err) {

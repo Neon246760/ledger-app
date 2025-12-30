@@ -16,8 +16,10 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const setUser = (newUser: any) => {
-    // Map backend avatar_path to avatarUrl for frontend compatibility
-    if (newUser?.avatar_path) {
+    // Map backend avatar_url to avatarUrl for frontend compatibility
+    if (newUser?.avatar_url) {
+      newUser.avatarUrl = newUser.avatar_url
+    } else if (newUser?.avatar_path) {
       newUser.avatarUrl = newUser.avatar_path
     }
 
@@ -31,6 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
     const updatedUser = { 
       ...(user.value || {}), 
       avatarUrl: url,
+      avatar_url: url,
       avatar_path: url 
     }
     
