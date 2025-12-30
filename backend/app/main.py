@@ -9,6 +9,7 @@ from .models import user as user_models
 from .models import transaction as transaction_models
 from .models import ledger as ledger_models
 from .models import budget as budget_models
+from .models import profile as profile_models
 
 app = FastAPI()
 

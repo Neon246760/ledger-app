@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.schemas.user import RegisterRequest, ChangePasswordRequest, DeleteAccountRequest
+from app.schemas.user import RegisterRequest, ChangePasswordRequest, DeleteAccountRequest, UserResponse, UserUpdate
 from app.services.user import UserService, get_user_service
 from app.core.security import get_current_user, verify_password, create_access_token, hash_text
+from app.crud.profile import ProfileRepo
 
 router = APIRouter()
 
@@ -29,6 +30,33 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), ser
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/me", response_model=UserResponse)
+def get_me(
+    current_username: str = Depends(get_current_user),
+    service: UserService = Depends(get_user_service),
+    profile_repo: ProfileRepo = Depends(ProfileRepo)
+):
+    user = service.repo.find_user_by_username(current_username)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    profile = profile_repo.get_by_user_id(user.id)
+    return {"id": user.id, "username": user.username, "avatar_url": profile.avatar_url if profile else None}
+
+
+@router.put("/me", response_model=UserResponse)
+def update_me(
+    payload: UserUpdate,
+    current_username: str = Depends(get_current_user),
+    service: UserService = Depends(get_user_service),
+    profile_repo: ProfileRepo = Depends(ProfileRepo)
+):
+    user = service.repo.find_user_by_username(current_username)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    profile = profile_repo.upsert_avatar(user.id, payload.avatar_url)
+    return {"id": user.id, "username": user.username, "avatar_url": profile.avatar_url}
 
 
 @router.post("/user/password")

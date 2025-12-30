@@ -10,7 +10,7 @@ services:
       - db:/data
       - uploads:/app/uploads
     ports:
-      - "8000:8000"
+      - "0.0.0.0:8000:8000"
 
   frontend:
     build:
@@ -20,7 +20,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "5000:80"
+      - "0.0.0.0:5000:80"
 
 volumes:
   db:
