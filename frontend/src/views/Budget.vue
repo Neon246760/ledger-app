@@ -14,7 +14,7 @@
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm md:col-span-2 flex flex-col justify-center">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Monthly Budget Goal</h3>
-          <button @click="openEditModal" class="bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg transition-all shadow-sm hover:shadow-md flex items-center gap-2">
+          <button @click="openEditModal" class="bg-primary hover:bg-purple-600 text-white font-bold py-2.5 px-5 rounded-lg transition-all shadow-sm hover:shadow-md flex items-center gap-2">
             <EditIcon class="w-5 h-5" />
             Edit Budget
           </button>
@@ -77,7 +77,7 @@
           </div>
           <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
             <button type="button" @click="showEditModal = false" class="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors font-medium">Cancel</button>
-            <button type="submit" class="px-4 py-2 bg-primary hover:bg-blue-600 text-white rounded-lg font-bold transition-colors shadow-sm hover:shadow">Save</button>
+            <button type="submit" class="px-4 py-2 bg-primary hover:bg-purple-600 text-white rounded-lg font-bold transition-colors shadow-sm hover:shadow">Save</button>
           </div>
         </form>
       </div>

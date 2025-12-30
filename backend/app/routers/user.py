@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.schemas.user import RegisterRequest
+from app.schemas.user import RegisterRequest, ChangePasswordRequest, DeleteAccountRequest
 from app.services.user import UserService, get_user_service
 from app.core.security import get_current_user, verify_password, create_access_token, hash_text
 
@@ -29,3 +29,21 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), ser
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/user/password")
+def update_password(
+    payload: ChangePasswordRequest,
+    current_username: str = Depends(get_current_user),
+    service: UserService = Depends(get_user_service)
+):
+    return service.change_password(current_username, payload.password, payload.repeat_password)
+
+
+@router.post("/user/delete")
+def delete_account(
+    payload: DeleteAccountRequest,
+    current_username: str = Depends(get_current_user),
+    service: UserService = Depends(get_user_service)
+):
+    return service.delete_account(current_username, payload.password, payload.avatar_url)

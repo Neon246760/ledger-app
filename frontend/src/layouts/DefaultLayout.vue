@@ -112,7 +112,7 @@
             </div>
             <div class="md:col-span-2 flex justify-end gap-3">
               <button class="px-3 py-2 bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 rounded-md" @click="togglePassword">Cancel</button>
-              <button class="px-3 py-2 bg-primary hover:bg-blue-600 text-white rounded-md font-medium" @click="submitPassword">Save</button>
+              <button class="px-3 py-2 bg-primary hover:bg-purple-600 text-white rounded-md font-medium" @click="submitPassword">Save</button>
             </div>
             <div v-if="passwordError" class="md:col-span-2 text-red-600 text-sm">{{ passwordError }}</div>
           </div>
@@ -180,7 +180,7 @@ const onAvatarSelected = async (e: Event) => {
   try {
     const res = await api.post('/upload/image', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
     const url = res.data.url
-    authStore.setUser({ ...(authStore.user || {}), avatarUrl: url })
+    authStore.setAvatarUrl(url)
   } catch (err) {
     console.error(err)
   }
@@ -216,7 +216,8 @@ const submitDelete = async () => {
     return
   }
   try {
-    await api.post('/user/delete', { password: confirmPassword.value })
+    await api.post('/user/delete', { password: confirmPassword.value, avatar_url: avatarUrl.value })
+    authStore.setAvatarUrl('')
     authStore.logout()
     router.push('/register')
   } catch (err: any) {
@@ -230,6 +231,6 @@ const submitDelete = async () => {
   @apply flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-primary transition-all font-medium border border-transparent;
 }
 .nav-item.router-link-active {
-  @apply bg-blue-50 text-primary border-blue-100 shadow-sm;
+  @apply bg-purple-50 text-primary border-purple-100 shadow-sm;
 }
 </style>

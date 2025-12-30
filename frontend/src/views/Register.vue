@@ -36,7 +36,7 @@
       <button 
         type="submit" 
         :disabled="loading"
-        class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full bg-primary hover:bg-purple-600 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {{ loading ? 'Creating Account...' : 'Sign Up' }}
       </button>
@@ -78,6 +78,8 @@ const handleRegister = async () => {
       password: form.value.password,
       repeat_password: form.value.repeat_password
     })
+    // Clear any stale avatar for this username
+    try { localStorage.removeItem(`avatar:${form.value.username}`) } catch {}
     
     // Redirect to login or auto login
     router.push('/login')

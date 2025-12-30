@@ -19,4 +19,14 @@ class UserRepo:
             raise HTTPException(status_code=409, detail="Username already exists")
         self.session.add(user)
         self.session.commit()
-        
+    
+    def update_password(self, user: Users, hashed_password: str):
+        user.password = hashed_password
+        self.session.add(user)
+        self.session.commit()
+        self.session.refresh(user)
+        return user
+
+    def delete_user(self, user: Users):
+        self.session.delete(user)
+        self.session.commit()

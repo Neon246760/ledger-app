@@ -54,3 +54,9 @@ class LedgerRepo:
         self.session.commit()
         return True
 
+    def delete_all_for_user(self, user_id: int):
+        items = self.get_user_ledgers(user_id=user_id, skip=0, limit=10_000)
+        for l in items:
+            self.session.delete(l)
+        self.session.commit()
+

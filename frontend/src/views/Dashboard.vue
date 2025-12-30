@@ -35,7 +35,7 @@
       </div>
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
         <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider mb-2">Balance</h3>
-        <div class="text-3xl font-bold text-primary">¥ {{ summary.balance.toFixed(2) }}</div>
+        <div class="text-3xl font-bold" :class="summary.balance < 0 ? 'text-red-600' : (summary.balance > 0 ? 'text-green-600' : 'text-gray-900')">¥ {{ summary.balance.toFixed(2) }}</div>
       </div>
     </div>
     
@@ -47,14 +47,14 @@
             <label class="block text-sm font-medium text-gray-700">Category Type</label>
             <div class="flex gap-2">
               <button
-                :class="newCategoryType === 'expense' ? 'bg-blue-50 text-primary border-blue-200' : 'bg-gray-50 text-gray-600 border-gray-200'"
+                :class="newCategoryType === 'expense' ? 'bg-purple-50 text-primary border-purple-200' : 'bg-gray-50 text-gray-600 border-gray-200'"
                 class="px-3 py-2 rounded-lg border font-medium"
                 @click="newCategoryType = 'expense'"
               >
                 Expense
               </button>
               <button
-                :class="newCategoryType === 'income' ? 'bg-blue-50 text-primary border-blue-200' : 'bg-gray-50 text-gray-600 border-gray-200'"
+                :class="newCategoryType === 'income' ? 'bg-purple-50 text-primary border-purple-200' : 'bg-gray-50 text-gray-600 border-gray-200'"
                 class="px-3 py-2 rounded-lg border font-medium"
                 @click="newCategoryType = 'income'"
               >
@@ -69,7 +69,7 @@
               placeholder="Enter category name"
             />
             <button
-              class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-2.5 px-5 rounded-lg transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+              class="w-full bg-primary hover:bg-purple-600 text-white font-bold py-2.5 px-5 rounded-lg transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2"
               @click="addCategory"
             >
               <PlusIcon class="w-5 h-5" />
