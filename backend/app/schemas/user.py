@@ -7,14 +7,6 @@ class RegisterRequest(BaseModel):
     password: str
     repeat_password: str
 
-class UserUpdate(BaseModel):
-    avatar_path: Optional[str] = None
-
-class UserResponse(BaseModel):
-    id: int
-    username: str
-    avatar_path: Optional[str] = None
-
 
 class ChangePasswordRequest(BaseModel):
     password: str

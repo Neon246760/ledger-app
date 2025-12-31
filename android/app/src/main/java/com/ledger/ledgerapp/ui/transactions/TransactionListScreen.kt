@@ -21,6 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
+import com.ledger.ledgerapp.network.RetrofitClient
 import com.ledger.ledgerapp.data.CategoryData
 import com.ledger.ledgerapp.data.TokenManager
 import com.ledger.ledgerapp.network.models.Transaction
@@ -425,20 +428,24 @@ fun TransactionItem(
                 // 图片标识
                 if (!transaction.imagePath.isNullOrEmpty()) {
                     Spacer(modifier = Modifier.height(4.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.Image,
-                            contentDescription = "有图片",
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "已上传凭证",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                    
+                    // 构建完整的图片URL
+                    val imageUrl = if (transaction.imagePath.startsWith("http")) {
+                        transaction.imagePath
+                    } else {
+                        val path = if (transaction.imagePath.startsWith("/")) transaction.imagePath.substring(1) else transaction.imagePath
+                        "${RetrofitClient.BASE_URL}$path"
                     }
+
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = "凭证图片",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(vertical = 4.dp),
+                        contentScale = ContentScale.Crop
+                    )
                 }
                 
                 Spacer(modifier = Modifier.height(4.dp))

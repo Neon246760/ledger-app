@@ -41,12 +41,21 @@ class BudgetViewModel(private val tokenManager: TokenManager) : ViewModel() {
                 val calendar = Calendar.getInstance()
                 val sdf = SimpleDateFormat("yyyy-MM", Locale.getDefault())
                 calendar.time = sdf.parse(month)!!
-                calendar.set(Calendar.DAY_OF_MONTH, 1)
-                val startDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
                 
+                // Start of month
+                calendar.set(Calendar.DAY_OF_MONTH, 1)
+                calendar.set(Calendar.HOUR_OF_DAY, 0)
+                calendar.set(Calendar.MINUTE, 0)
+                calendar.set(Calendar.SECOND, 0)
+                val startDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(calendar.time)
+                
+                // End of month
                 calendar.add(Calendar.MONTH, 1)
                 calendar.add(Calendar.DAY_OF_MONTH, -1)
-                val endDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
+                calendar.set(Calendar.HOUR_OF_DAY, 23)
+                calendar.set(Calendar.MINUTE, 59)
+                calendar.set(Calendar.SECOND, 59)
+                val endDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(calendar.time)
 
                 val transactionResponse = apiService.getTransactions(
                     type = "expense",
